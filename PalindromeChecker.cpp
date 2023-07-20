@@ -1,5 +1,5 @@
 #include <string>
-#include <algorithm>
+#include <cctype>
 
 #include "PalindromeChecker.h"
 
@@ -12,8 +12,21 @@ JNIEXPORT jboolean JNICALL Java_PalindromeChecker_isPalindrome(JNIEnv* env, jobj
     std::string strInput(input);
     env->ReleaseStringUTFChars(str, input);
 
-    std::string strCopy = strInput;
-    std::reverse(strCopy.begin(), strCopy.end());
+    std::string processedString;
+    for (char ch : strInput) {
+        if (!std::isspace(ch) && ch != ',' && ch != '!' && ch != '?' && ch != '.' && ch != '\'') {
+            processedString += std::tolower(ch);
+        }
+    }
 
-    return strInput == strCopy;
+    int left = 0;
+    int right = processedString.length() - 1;
+    while (left < right) {
+        if (processedString[left] != processedString[right]) {
+            return false;
+        }
+        left++;
+        right--;
+    }
+    return true;
 }
